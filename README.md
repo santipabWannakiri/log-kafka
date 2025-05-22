@@ -1,3 +1,28 @@
+# Kafka Broker Cluster and Data Access
+
+- **Cluster Purpose:**  
+  Brokers replicate data across the cluster to provide fault tolerance and data durability.
+
+- **Leader Role:**  
+  Each partition has a single leader broker that handles all producer and consumer read/write requests.
+
+- **Follower Role:**  
+  Followers replicate data from the leader but do **not** serve read or write requests during normal operation.
+
+- **Failover:**  
+  If the leader fails, a follower is elected as the new leader to maintain availability and continuity.
+
+
+- Consumers **read only from the leader broker** of each partition.
+- Followers replicate data but do **not serve read requests** unless promoted.
+- If a leader broker goes down, one of the followers is **promoted to leader**.
+- After promotion, consumers start reading from the **new leader broker**.
+---
+
+This architecture ensures high availability and data safety, while
+
+
+
 # Kafka Partition Sizing Example
 
 When designing Kafka topics and partitions, consider the expected message throughput and desired consumer parallelism.
