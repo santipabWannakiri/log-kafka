@@ -93,4 +93,50 @@ This ensures messages related to the same driver go to the same partition for or
 - Keeps all messages for a driver in the same partition for ordered consumption.
 - Number of partitions should be planned based on throughput and parallel consumers.
 
+# Kafka: Partition and Consumer Group Mapping
+## Key Concepts
+
+- Each **partition** can be read by **only one consumer** in a **consumer group** at a time.
+- **Multiple consumer groups** can consume messages from the same topic independently.
+- This enables different microservices (e.g., billing, notifications) to process the same stream of events for different business logic.
+
+## Example Configuration
+
+- **Topic**: `ride-events`
+- **Partitions**: 3
+- **Consumer Groups**:
+  - `group-billing`
+  - `group-notification`
+
+## Partition to Consumer Mapping
+
+| Partition | `group-billing` (Billing Service) | `group-notification` (Notification Service) |
+|-----------|-----------------------------------|---------------------------------------------|
+| P0        | consumer-a                        | consumer-x                                  |
+| P1        | consumer-b                        | consumer-y                                  |
+| P2        | consumer-c                        | consumer-z                                  |
+
+## Processing Flow
+
+Each consumer group independently processes the same message stream:
+
+- **group-billing**
+  - Calculates fare
+  - Applies discounts
+  - Processes payments
+
+- **group-notification**
+  - Sends SMS
+  - Sends push/email notifications
+  - Logs user communication events
+
+## Key Notes
+
+- Kafka guarantees **at-least-once delivery per consumer group**.
+- Consumers in **different groups** do not affect each other.
+- Kafka **scales** horizontally by increasing the number of **partitions**.
+- To maximize parallelism, ensure number of **consumers ≤ partitions** per group.
+
+
+
 
