@@ -138,5 +138,17 @@ Each consumer group independently processes the same message stream:
 - To maximize parallelism, ensure number of **consumers ≤ partitions** per group.
 
 
+## Kafka Ordering Guarantee
+
+Kafka guarantees ordering **only within a partition**. When designing producers:
+
+- Use **consistent keys** (e.g., user ID, transaction ID) to ensure related messages go to the same partition.
+- **Do not expect total ordering** across multiple partitions.
+
+| Scope               | Guarantee |
+|---------------------|-----------|
+| Within Partition     | ✅ Yes    |
+| Across Partitions    | ❌ No     |
+
 
 
