@@ -151,4 +151,17 @@ Kafka guarantees ordering **only within a partition**. When designing producers:
 | Across Partitions    | ❌ No     |
 
 
+## Typical Real-World Pattern for Kafka Event Ordering
+
+1. **Producer** sends events with a key (e.g., `userId`, `txnId`) → event is assigned to a specific partition based on the key.
+
+2. **Kafka** stores events ordered within each partition.
+
+3. **Consumer** reads partitions in parallel and processes messages **in order within each partition**.
+
+4. **Consumer** writes events to a database or other storage system.
+
+5. The **database or application layer** can:
+   - Use timestamps or Kafka offsets to maintain or reconstruct event order.
+   - Handle ordering conflicts or late-arriving events based on business logic.
 
